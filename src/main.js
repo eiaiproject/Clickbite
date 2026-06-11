@@ -124,14 +124,11 @@ function Header() {
 
 function Hero() {
   return `<section class="hero" id="top" aria-labelledby="hero-title">
-    <picture class="hero-picture">
-      <img src="/assets/products/webp/burnt_cheesecake_16_classic.webp" alt="Burnt Cheesecake Classic Clickbite dengan tulisan custom" width="1080" height="1080">
-    </picture>
     <div class="container hero-inner">
       <div class="hero-copy">
         ${Badge("Home-baked Dessert Gift Sidoarjo", "cream")}
         <h1 id="hero-title">Dessert Gift Cantik untuk Momen Spesialmu</h1>
-        <p>Burnt cheesecake, brownies gift, dan flower box cake home-baked dari Sidoarjo. Bisa request tulisan, cocok untuk birthday, anniversary, thank-you gift, dan surprise kecil.</p>
+        <p>Burnt cheesecake, brownies gift, dan flower box cake home-baked dari Sidoarjo. Bisa request tulisan untuk birthday, anniversary, thank-you gift, dan surprise.</p>
         <div class="hero-actions">
           ${Button({
             label: "Order via WhatsApp",
@@ -157,6 +154,10 @@ function Hero() {
           <span><b>Send</b> Pickup / GoSend / Kurir</span>
           <span><b>Text</b> Bisa request tulisan</span>
         </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <img class="hero-visual-main" src="/assets/products/webp/burnt_cheesecake_16_classic.webp" alt="" width="1080" height="1080" loading="eager" fetchpriority="high">
+        <img class="hero-visual-accent" src="/assets/products/webp/flower_box_cake.webp" alt="" width="1080" height="1080" loading="eager">
       </div>
     </div>
   </section>`;
@@ -533,45 +534,11 @@ function bindStickyCta() {
 }
 
 function bindScrollReveal() {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-  );
-
-  document.querySelectorAll(".section, .product-card, .category-card, .trust-card, .step-card").forEach((el) => {
-    el.classList.add("reveal");
-    observer.observe(el);
-  });
+  // Keep content visible immediately; CSS handles subtle motion without hiding sections.
 }
 
 function bindImageFadeIn() {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          if (img.complete) {
-            img.classList.add("is-loaded");
-          } else {
-            img.addEventListener("load", () => img.classList.add("is-loaded"), { once: true });
-          }
-          observer.unobserve(img);
-        }
-      });
-    },
-    { rootMargin: "100px" }
-  );
-
-  document.querySelectorAll(".product-media img, .category-card img").forEach((img) => {
-    observer.observe(img);
-  });
+  // Images are now visible by default, no fade-in needed
 }
 
 function bindAccordion() {
