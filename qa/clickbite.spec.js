@@ -7,7 +7,7 @@ test.use({ channel: "chrome" });
 for (const width of viewports) {
   test(`landing page responsive smoke ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: width < 768 ? 780 : 900 });
-    await page.goto("http://localhost:5173/", { waitUntil: "networkidle" });
+    await page.goto("/", { waitUntil: "networkidle" });
     await page.evaluate(async () => {
       const step = Math.max(320, window.innerHeight * 0.75);
       for (let y = 0; y <= document.body.scrollHeight; y += step) {
@@ -34,6 +34,8 @@ for (const width of viewports) {
         categoryCards: document.querySelectorAll(".category-card").length,
         tabs: document.querySelectorAll("[data-menu-tab]").length,
         chips: document.querySelectorAll("[data-occasion]").length,
+        accordions: document.querySelectorAll(".accordion-trigger").length,
+        orderHighlights: document.querySelectorAll(".order-highlights div").length,
         analyticsEvents: Object.keys(window.ClickbiteAnalyticsEvents || {}).length,
         title: document.title,
         description:
@@ -51,29 +53,25 @@ for (const width of viewports) {
 
     expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.innerWidth + 1);
     expect(brokenImages).toEqual([]);
-    expect(metrics.productCards).toBeGreaterThanOrEqual(12);
-    expect(metrics.categoryCards).toBe(4);
-    expect(metrics.tabs).toBe(5);
-    expect(metrics.chips).toBe(8);
-    expect(metrics.analyticsEvents).toBeGreaterThanOrEqual(10);
+    expect(metrics.productCards).toBeGreaterThanOrEqual(18);
+    expect(metrics.categoryCards).toBe(0);
+    expect(metrics.tabs).toBe(0);
+    expect(metrics.chips).toBe(0);
+    expect(metrics.accordions).toBe(0);
+    expect(metrics.orderHighlights).toBe(4);
+    expect(metrics.analyticsEvents).toBeGreaterThanOrEqual(8);
     expect(metrics.title).toContain("Clickbite");
     expect(metrics.description).toContain("home-baked dessert gift");
     expect(metrics.globalHref).toContain("text=Halo%20Clickbite");
-
-    await page.click('[data-menu-tab="brownies-gift"]');
-    await expect(page.locator("#menu-products .product-card")).toHaveCount(6);
-
-    await page.click('[data-occasion="Anniversary"]');
-    await expect(page.locator("#occasion-products .product-card")).toHaveCount(2);
-
-    await page.click(".accordion-trigger");
-    await expect(page.locator(".accordion-item.is-open")).toHaveCount(1);
+    await expect(page.locator("#menu-products .product-card")).toHaveCount(
+      metrics.productCards
+    );
 
     const productHref = await page
       .locator("#menu-products .product-card a.btn")
       .first()
       .getAttribute("href");
-    expect(productHref).toContain("Menu%3A%20Brownies");
+    expect(productHref).toContain("Menu%3A%20");
     expect(productHref).toContain("Harga%3A%20IDR");
 
     if (width < 768) {
